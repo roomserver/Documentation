@@ -1,12 +1,18 @@
-## Welcome to GitHub Pages
+## Getting Started
 
 You can use the [editor on GitHub](https://github.com/roomserver/Documentation/edit/master/index.md) to maintain and preview the content for your website in Markdown files.
 
 Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
 
-### Markdown
+### Detection of temperature using Computer Vision
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+This follwing piece of code detects the temperature from the picture taken. OpenCV with Python is used.
+
+```python
+if isAwesome==0:
+  print("Works")
+
+```
 
 ```markdown
 Syntax highlighted code block
