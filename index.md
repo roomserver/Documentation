@@ -1,8 +1,50 @@
 ## Getting Started
 
-You can use the [editor on GitHub](https://github.com/roomserver/Documentation/edit/master/index.md) to maintain and preview the content for your website in Markdown files.
+Features:
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+```markdown
+* Taking a picture using the PiCamera
+* Detecting the temperature from the picture taken of the display
+* Sending out mail/SMS alerts
+* Provision to suspend/resume receiving alerts
+* Getting information about users registered to receive alerts
+```
+
+### Taking a picture using the PiCamera
+
+A picture of the temperature display is taken and the saved in the directory /home/pi/Pictures/server under the name image.jpg.
+The picture is saved only when the lights aren't switched on in the server room.
+This code on Github can be found [here](https://github.com/shwetha1607/Server-temp/blob/Version-1.1/stillpic.py)
+
+```markdown
+# stillpic.py
+```
+
+```python
+from picamera import PiCamera
+from picamera.array import PiRGBArray
+import time
+import cv2
+
+camera= PiCamera()
+camera.resolution = (640, 480)
+rawCapture = PiRGBArray(camera, size=(640,480))
+
+time.sleep(5)
+#camera.capture('/home/pi/Desktop/image.jpg')
+camera.capture(rawCapture,format='bgr')
+image = rawCapture.array
+
+#at_time = time.strftime("%d%m%Y-%H%M%S", time.localtime())
+gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+blur = cv2.blur(gray, (5, 5))
+
+if cv2.mean(blur)[0] < 3.0:
+	cv2.imwrite('/home/pi/Pictures/server/image.jpg', image)
+else:
+	#print('lights on')
+	pass
+```
 
 ### Detection of temperature using Computer Vision
 
