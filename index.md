@@ -44,9 +44,7 @@ else:
 ### Detection of temperature using Computer Vision
 
 The picture taken is preprocessed and the digits are detected. Here is the breakdown of the process:
-```python
-print('Hello')
-```
+
 ###### temp_detect.py
 
  * Import the packages
@@ -116,18 +114,11 @@ class TempDetect:
 
         cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         cnts = imutils.grab_contours(cnts)
-
-        digitCnts = []
-
+	digitCnts = []
+	
         for c in cnts:
             # compute the bounding box of the contour
             (x, y, w, h) = cv2.boundingRect(c)
-            print(x, y, w, h)
-
-            #cv2.rectangle(thresh, (x, y), (x+w, y+h), (255, 255, 255), 1)
-            #cv2.imshow('box', thresh)
-            #cv2.waitKey(0)
-
             # if the contour is sufficiently large, it must be a digit
             # first condition for digit 1
             if (4 <= w <= 14) and (20 <= h <= 55):
@@ -139,18 +130,66 @@ class TempDetect:
         print('len: ', len(digitCnts))
 
         return digitCnts
-
 ```
 
-* Each digit is a contour. 
+* Each digit is saved as a contour in digitCnts. Each segment of the digit contour is iterated over to check if that segment is active (>50% of the area has white pixels). This builds a tuple with 1 for active segments and 0 for inactive segments. This tuple acts as the key and matched for its value from the DIGITS_LOOKUP dictionary.
+```python
+    def detect_digit(self, thresh, digitCnts):
 
- 
+        digits = []
+        for c in digitCnts:
+            (x, y, w, h) = cv2.boundingRect(c)            
+            if (4 <= w <= 14) and (20 <= h <= 55):
+                on = (0, 0, 1, 0, 0, 1, 0)
+            else:
+                roi = thresh[y:y+h, x:x+w]
+                (roiH, roiW) = roi.shape               
+                (dW, dH) = (int(roiW * 0.3), int(roiH * 0.15))
+                dHC = int(roiH * 0.05)
+                dBR = int(roiW * 0.5)
 
+                segments = [
+                    ((dH, 0), (w-dH, dH)),  # top
+                    ((0, dH), (dW, h // 2 - dHC)),  # top-left
+                    ((w - dW, dH), (w, h // 2 - dHC)),  # top-right
+                    ((dH, (h // 2)-dHC ), (w-dH, (h // 2)+dHC)),  # center
+                    ((0, h // 2 + dHC), (dW, h - dH)),  # bottom-left
+                    ((w - dBR, h // 2 + dHC), (w, h - dH)),  # bottom-right
+                    ((dH, h - dH), (w-dH, h))  # bottom
+                ]
 
+                on = [0] * len(segments)
+
+                for (i, ((xs, ys), (xf, yf))) in enumerate(segments):
+                    segRoi = roi[ys:yf, xs:xf]
+                    #cv2.imshow('segment', segRoi)
+                    #cv2.waitKey(0)
+                    no_of_pixels = cv2.countNonZero(segRoi)
+                    area = (xf - xs) * (yf - ys)
+
+                    if no_of_pixels / float(area) >= 0.5:
+                        on[i] = 1
+
+                    print(on)
+
+            digit = DIGITS_LOOKUP.get(tuple(on), -1)
+            digits.append(digit)
+
+        return digits
+```
+
+* A method that makes the calls of each of the above mentioned functions.
+```python
+    def final_call(self, iterval):
+        thresh = self.pre_processing(iteration_val=iterval)
+        digitCnts = self.find_contours(thresh)
+        digits = self.detect_digit(thresh, digitCnts)
+        print(digits)
+        cv2.destroyAllWindows()
+        return digits
+```
 
 The entire code on github can be found [here](https://github.com/shwetha1607/Server-temp/blob/Version-1.1/temp_detect2%20(1).py).
-
-
 
 ### Jekyll Themes
 
