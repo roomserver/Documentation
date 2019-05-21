@@ -2,23 +2,20 @@
 
 Features:
 
-```markdown
 * Taking a picture using the PiCamera
 * Detecting the temperature from the picture taken of the display
 * Sending out mail/SMS alerts
 * Provision to suspend/resume receiving alerts
 * Getting information about users registered to receive alerts
-```
+
 
 ### Taking a picture using the PiCamera
 
 A picture of the temperature display is taken and the saved in the directory /home/pi/Pictures/server under the name image.jpg.
 The picture is saved only when the lights aren't switched on in the server room.
-This code on Github can be found [here](https://github.com/shwetha1607/Server-temp/blob/Version-1.1/stillpic.py)
+[Github link](https://github.com/shwetha1607/Server-temp/blob/Version-1.1/stillpic.py).
 
-```markdown
-# stillpic.py
-```
+##### stillpic.py
 
 ```python
 from picamera import PiCamera
@@ -31,11 +28,9 @@ camera.resolution = (640, 480)
 rawCapture = PiRGBArray(camera, size=(640,480))
 
 time.sleep(5)
-#camera.capture('/home/pi/Desktop/image.jpg')
 camera.capture(rawCapture,format='bgr')
 image = rawCapture.array
 
-#at_time = time.strftime("%d%m%Y-%H%M%S", time.localtime())
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 blur = cv2.blur(gray, (5, 5))
 
@@ -48,33 +43,11 @@ else:
 
 ### Detection of temperature using Computer Vision
 
-This follwing piece of code detects the temperature from the picture taken. OpenCV with Python is used.
+The picture taken is preprocessed and the digits are detected.
 
-```python
-if isAwesome==0:
-  print("Works")
+[Github link](https://github.com/shwetha1607/Server-temp/blob/Version-1.1/temp_detect2%20(1).py).
 
-```
 
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
 
 ### Jekyll Themes
 
