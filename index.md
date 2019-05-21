@@ -191,9 +191,28 @@ class TempDetect:
 
 The entire code on github can be found [here](https://github.com/shwetha1607/Server-temp/blob/Version-1.1/temp_detect2%20(1).py).
 
-### Jekyll Themes
+### Sending out mail/SMS alerts
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/roomserver/Documentation/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+A mailing service and a messaging service is set up. The mail credentials and API credentials are saved in a file named config.py
+
+###### config.py
+```python
+class TextLocal:
+        def __init__(self):
+                self.apiKey = 'api-key'
+                self.senderID = 'Sender ID'              
+
+class Email:
+        def __init__(self):
+                self.SMTP_SERVER = 'smtp.gmail.com'
+                self.SMTP_PORT = 465
+                self.FROM_ADD = 'user@gmail.com'
+                self.USERNAME = 'user@gmail.com'
+                self.PASSWORD = 'password'
+```
+#### SMS alerts
+[TextLocal](https://www.textlocal.in/) is the SMS platform used to send out alerts.
+
 
 ### Support or Contact
 
